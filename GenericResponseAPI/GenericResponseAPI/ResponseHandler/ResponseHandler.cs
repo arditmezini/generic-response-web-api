@@ -1,9 +1,16 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using GenericResponseAPI.Models;
+using System.Web;
+using System.Web.Http.Routing;
+using Newtonsoft.Json;
 
 namespace GenericResponseAPI.ResponseHandler
 {
@@ -11,14 +18,16 @@ namespace GenericResponseAPI.ResponseHandler
     {
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
+            var apiLog = CreateApiLog(request);
+
             var watcher = Stopwatch.StartNew();
             var response = await base.SendAsync(request, cancellationToken);
             watcher.Stop();
 
-            return BuildApiResponse(request, response, watcher.ElapsedMilliseconds.ToString());
+            return BuildApiResponse(request, response, apiLog, watcher.ElapsedMilliseconds.ToString());
         }
 
-        private static HttpResponseMessage BuildApiResponse(HttpRequestMessage request, HttpResponseMessage response, string responseTime)
+        private static HttpResponseMessage BuildApiResponse(HttpRequestMessage request, HttpResponseMessage response, ApiLog apiLog, string responseTime)
         {
             object content;
             string errorMessage = null;
@@ -36,14 +45,34 @@ namespace GenericResponseAPI.ResponseHandler
 #endif
                 }
             }
-            var newResponse = request.CreateResponse(response.StatusCode, new APIResponse(response.StatusCode, content, errorMessage, response.IsSuccessStatusCode, responseTime));
+
+            apiLog.ResponseStatusCode = (int)response.StatusCode;
+            apiLog.ResponseTimestamp = DateTime.Now;
+
+            var apiResponseModel = request.CreateResponse(response.StatusCode, new ApiResponse<object>(response.StatusCode, content, apiLog, errorMessage, response.IsSuccessStatusCode, responseTime));
 
             foreach (var header in response.Headers)
             {
-                newResponse.Headers.Add(header.Key, header.Value);
+                apiResponseModel.Headers.Add(header.Key, header.Value);
             }
+            return apiResponseModel;
+        }
 
-            return newResponse;
+        private ApiLog CreateApiLog(HttpRequestMessage request)
+        {
+            var context = ((HttpContextBase)request.Properties["MS_HttpContext"]);
+
+            return new ApiLog
+            {
+                Application = "[calling application]",
+                User = context.User.Identity.Name,
+                Machine = Environment.MachineName,
+                RequestContentType = context.Request.ContentType,
+                RequestIpAddress = context.Request.UserHostAddress,
+                RequestMethod = request.Method.Method,
+                RequestTimestamp = DateTime.Now,
+                RequestUri = request.RequestUri.ToString()
+            };
         }
     }
 }
