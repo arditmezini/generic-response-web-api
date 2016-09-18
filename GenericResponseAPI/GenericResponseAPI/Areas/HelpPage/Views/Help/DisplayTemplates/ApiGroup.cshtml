@@ -1,41 +1,57 @@
-@using System.Web.Http
 @using System.Web.Http.Controllers
 @using System.Web.Http.Description
 @using GenericResponseAPI.Areas.HelpPage
-@using GenericResponseAPI.Areas.HelpPage.Models
 @model IGrouping<HttpControllerDescriptor, ApiDescription>
 
 @{
-    var controllerDocumentation = ViewBag.DocumentationProvider != null ? 
-        ViewBag.DocumentationProvider.GetDocumentation(Model.Key) : 
+    var controllerDocumentation = ViewBag.DocumentationProvider != null ?
+        ViewBag.DocumentationProvider.GetDocumentation(Model.Key) :
         null;
 }
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-heading" data-toggle="collapse" data-target="#collapse-@Model.Key.ControllerName" href="#collapse-@Model.Key.ControllerName">
+            <h4 id="@Model.Key.ControllerName" class="panel-title">
+                @Model.Key.ControllerName
+            </h4>
+        </div>
+        <div id="collapse-@Model.Key.ControllerName" class="panel-collapse collapse in">
+            <br />
+            @if (!String.IsNullOrEmpty(controllerDocumentation))
+            {
+                <div class="alert alert-info" style="margin-left: 15px; margin-right: 15px;">
+                    <p>@controllerDocumentation</p>
 
-<h2 id="@Model.Key.ControllerName">@Model.Key.ControllerName</h2>
-@if (!String.IsNullOrEmpty(controllerDocumentation))
-{
-    <p>@controllerDocumentation</p>
-}
-<table class="help-page-table">
-    <thead>
-        <tr><th>API</th><th>Description</th></tr>
-    </thead>
-    <tbody>
-    @foreach (var api in Model)
-    {
-        <tr>
-            <td class="api-name"><a href="@Url.Action("Api", "Help", new { apiId = api.GetFriendlyId() })">@api.HttpMethod.Method @api.RelativePath</a></td>
-            <td class="api-documentation">
-            @if (api.Documentation != null)
-            {
-                <p>@api.Documentation</p>
+                </div>
             }
-            else
-            {
-                <p>No documentation available.</p>
-            }
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>
+            <table style="margin-left: 15px; margin-right: 15px;" class="help-page-table table table-responsive table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>API</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                @foreach (var api in Model)
+                {
+
+                    <tbody>
+                        <tr>
+                            <td class="api-name"><a href="@Url.Action("Api", "Help", new {apiId = api.GetFriendlyId()})">@api.HttpMethod.Method @api.RelativePath</a></td>
+                            <td class="api-documentation">
+                                @if (api.Documentation != null)
+                                {
+                                    <p>@api.Documentation</p>
+                                }
+                                else
+                                {
+                                    <p>No documentation available.</p>
+                                }
+                            </td>
+                        </tr>
+                    </tbody>
+                }
+            </table>
+        </div>
+    </div>
+    <br />
+</div>

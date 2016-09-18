@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using GenericResponseAPI.Models;
 using System.Web;
-using System.Web.Http.Routing;
-using Newtonsoft.Json;
 
 namespace GenericResponseAPI.ResponseHandler
 {
@@ -58,7 +53,7 @@ namespace GenericResponseAPI.ResponseHandler
             return apiResponseModel;
         }
 
-        private ApiLog CreateApiLog(HttpRequestMessage request)
+        private static ApiLog CreateApiLog(HttpRequestMessage request)
         {
             var context = ((HttpContextBase)request.Properties["MS_HttpContext"]);
 
@@ -67,7 +62,6 @@ namespace GenericResponseAPI.ResponseHandler
                 Application = "[calling application]",
                 User = context.User.Identity.Name,
                 Machine = Environment.MachineName,
-                RequestContentType = context.Request.ContentType,
                 RequestIpAddress = context.Request.UserHostAddress,
                 RequestMethod = request.Method.Method,
                 RequestTimestamp = DateTime.Now,

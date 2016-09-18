@@ -33,11 +33,6 @@ namespace GenericResponseAPI.Models
         public string RequestIpAddress { get; set; }
 
         /// <summary>
-        /// The request content type.
-        /// </summary>
-        public string RequestContentType { get; set; }
-
-        /// <summary>
         /// The request URI.
         /// </summary>
         public string RequestUri { get; set; }

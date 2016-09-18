@@ -6,7 +6,7 @@ namespace GenericResponseAPI.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Title = "Home Page";
+            ViewBag.Title = "Fun API";
 
             return View();
         }

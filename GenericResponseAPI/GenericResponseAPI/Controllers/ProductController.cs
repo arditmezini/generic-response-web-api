@@ -4,8 +4,15 @@ using GenericResponseAPI.Models;
 
 namespace GenericResponseAPI.Controllers
 {
+    /// <summary>
+    /// Manages Products
+    /// </summary>
     public class ProductController : ApiController
     {
+        /// <summary>
+        /// Returns all products
+        /// </summary>
+        /// <returns></returns>
         public IHttpActionResult GetProducts()
         {
             var products = new List<Product>{
