@@ -65,7 +65,9 @@ namespace GenericResponseAPI.ResponseHandler
                 RequestIpAddress = context.Request.UserHostAddress,
                 RequestMethod = request.Method.Method,
                 RequestTimestamp = DateTime.Now,
-                RequestUri = request.RequestUri.ToString()
+                RequestUri = request.RequestUri.ToString(),
+                Browser = context.Request.Browser.Browser + " v."+context.Request.Browser.Version,
+                IsBrowserMobile = context.Request.Browser.IsMobileDevice
             };
         }
     }

@@ -56,5 +56,15 @@ namespace GenericResponseAPI.Models
         /// The response timestamp.
         /// </summary>
         public DateTime? ResponseTimestamp { get; set; }
+
+        /// <summary>
+        /// The browser used.
+        /// </summary>
+        public string Browser { get; set; }
+
+        /// <summary>
+        /// Is browser mobile.
+        /// </summary>
+        public bool IsBrowserMobile { get; set; }
     }
 }

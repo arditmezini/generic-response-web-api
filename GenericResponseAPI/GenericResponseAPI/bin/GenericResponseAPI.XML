@@ -542,6 +542,16 @@
             The response timestamp.
             </summary>
         </member>
+        <member name="P:GenericResponseAPI.Models.ApiLog.Browser">
+            <summary>
+            The browser used.
+            </summary>
+        </member>
+        <member name="P:GenericResponseAPI.Models.ApiLog.IsBrowserMobile">
+            <summary>
+            Is browser mobile.
+            </summary>
+        </member>
         <member name="P:GenericResponseAPI.Models.ApiResponse`1.Version">
             <summary>
             Version of Api used
