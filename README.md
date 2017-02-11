@@ -1,6 +1,6 @@
 # generic-response-web-api
 Generic API Response with useful metadata
-
+```json
 Response Example:
 {
 	"Version":"1",
@@ -29,3 +29,4 @@ Response Example:
 			"ResponseTimestamp":"2016-09-17T23:06:57.354854+02:00"
 		}
 }
+'''
